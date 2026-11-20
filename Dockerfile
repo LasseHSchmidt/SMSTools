@@ -18,8 +18,9 @@ COPY db_init.php /usr/local/bin/db_init.php
 # Copy application source files into the Apache document root
 COPY . /var/www/html/
 
-# Set proper ownership and permissions for Apache
-RUN chown -R www-data:www-data /var/www/html
+# Remove CLI-only scripts and config templates from the public web root
+RUN rm -f /var/www/html/db_init.php /var/www/html/.env.example \
+    && chown -R www-data:www-data /var/www/html
 
 # Expose HTTP port
 EXPOSE 80
