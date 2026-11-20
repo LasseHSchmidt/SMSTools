@@ -76,7 +76,7 @@ All passwords, API keys, and default login credentials are managed exclusively f
 ```bash
 cd /opt/stacks/sms-tools
 docker compose pull
-docker compose up -d
+docker compose up -d --build
 ```
 
 ---
