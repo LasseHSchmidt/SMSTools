@@ -1,6 +1,11 @@
 <?php
 require_once '/var/www/html/config.php';
 
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 $host = Config::dbHost();
 $user = Config::dbUser();
 $pass = Config::dbPass();
