@@ -62,19 +62,7 @@ All passwords, API keys, and default login credentials are managed exclusively f
 
 ---
 
-## 4. Database Structure & Automatic Synchronization
-
-Every time `sms-tools-web` starts, `/usr/local/bin/db_init.php` runs automatically before Apache launches. The script:
-1. Waits for MariaDB (`sms-tools-db`) to become ready.
-2. Automatically creates the following three tables if they do not already exist:
-   * **`SMSGroups`**: Stores login credentials and sender details (`ListId`, `Username`, `Password`, `CellPhone`).
-   * **`SMSReceivers`**: Stores recipient lists (`ReceiverId`, `ListId`, `FullName`, `ShortName`, `CellPhone`, `Phone`, `Email`, `BirthDay`).
-   * **`SMSLog`**: Logs sent SMS messages and costs (`SMSId`, `ListId`, `CellPhone`, `Message`, `Status`, `Date`).
-3. Synchronizes the values from `SMS_GROUP_ID`, `SMS_GROUP_USER`, `SMS_GROUP_PASS`, and `SMS_GROUP_PHONE` in `.env` into `SMSGroups` using `INSERT ... ON DUPLICATE KEY UPDATE`.
-
----
-
-## 5. Updating Login, Sender, or Application Code
+## 4. Updating Login, Sender, or Application Code
 
 ### Update Login or Sender ID (`.env`)
 1. Edit the values in `/opt/stacks/sms-tools/.env`.
@@ -93,7 +81,7 @@ docker compose up -d
 
 ---
 
-## 6. Troubleshooting & Tips
+## 5. Troubleshooting & Tips
 
 * **Check Container Status and Startup Logs:**
   ```bash
