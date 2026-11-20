@@ -1,0 +1,300 @@
+:root {
+    --primary-color: #2563eb;
+    --success-color: #10b981;
+    --error-color: #ef4444;
+    --header-bg: #4d4e66;
+    --row-even: #f8fafc;
+    --row-hover: #f1f5f9;
+    --border-color: #e2e8f0;
+    --menu-bg: #939393;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
+/* Grundlæggende opsætning */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+}
+
+/* Wrapper der holder styr på de 1000px */
+.wrapper {
+    width: 100%;            /* Fylder skærmen på mobilen */
+    max-width: 1000px;      /* Stopper ved 1000px på computeren */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box; /* Vigtigt for at padding ikke skubber bredden */
+}
+
+/* --- BANNER SEKTION --- */
+#banner {
+    width: 100%;            /* Skalerer med skærmen */
+    max-width: 1000px;
+    height: auto;           /* Bevarer proportionerne på billedet */
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    line-height: 0;
+}
+
+#banner img {
+    width: 100%;            /* Skalerer med skærmen */
+    max-width: 1000px;
+    height: auto;           /* Bevarer proportionerne på billedet */
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* --- MENU SEKTION --- */
+#topmenu {
+    width: 100%;
+    max-width: 1000px;
+    background-color: var(--menu-bg);
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0 0 12px 12px; /* Runde hjørner i bunden */
+    overflow: hidden;
+
+    /* --- STICKY POSITIONERING --- */
+    position: -webkit-sticky; /* Til Safari */
+    position: sticky;
+    top: 0;                   /* Hvor den skal stoppe (øverst på skærmen) */
+    z-index: 1000;            /* Sikrer at den ligger over tabellen og indholdet */
+}
+
+#topmenu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    /* Gør menuen scrollbar på mobilen */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Gør scroll blød på iPhone */
+}
+
+/* Skjul den grimme scrollbar men bevar funktionen (valgfrit) */
+#topmenu ul::-webkit-scrollbar {
+    display: none;
+}
+
+#topmenu li {
+    flex: 0 0 auto;
+}
+
+#topmenu a {
+    display: block;
+    padding: 14px 22px;
+    text-decoration: none;
+    color: white;
+    white-space: nowrap; /* Sikrer at teksten ikke knækker i to linjer */
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#topmenu a:hover {
+    background-color: var(--header-bg);
+}
+
+#topmenu a.active {
+    background-color: var(--primary-color);
+    font-weight: 600;
+}
+
+#topmenu li.logout a {
+    color: #ffcfcf;
+    margin-left: auto;
+}
+
+#topmenu li.logout a:hover {
+    background-color: var(--error-color);
+    color: white;
+}
+
+/* --- FORM & LOGIN CONTAINERE --- */
+.container {
+    width: 100%;            /* Fylder skærmen på mobilen */
+    max-width: 1000px;      /* Stopper ved 1000px på computeren */
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box; /* Vigtigt for at padding ikke skubber bredden */
+}
+
+.form-container, .login-container, .sms-container {
+    width: 100%;            /* Fylder skærmen på mobilen */
+    max-width: 1000px;      /* Stopper ved 1000px på computeren */
+    margin: 25px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+.form-container h2, .login-container h2, .sms-container h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--header-bg);
+    font-weight: 600;
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+/* Form elementer */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Knapper */
+.submit-btn, .login-btn, .send-btn {
+    width: 100%;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn { background-color: var(--success-color); }
+.submit-btn:hover { background-color: #059669; }
+
+.login-btn, .send-btn { background-color: var(--primary-color); }
+.login-btn:hover, .send-btn:hover { background-color: #1d4ed8; }
+
+/* --- TABEL STYLING --- */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Tillader vandret rulning af kun tabellen */
+    -webkit-overflow-scrolling: touch;
+    margin-top: 0px;
+    border-radius: 12px;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px; /* Runde hjørner på hele tabellen */
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 25px;
+}
+
+.modern-table th {
+    background-color: var(--header-bg);
+    color: #ffffff;
+    padding: 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.modern-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.modern-table tbody tr:nth-child(even) {
+    background-color: var(--row-even);
+}
+
+.modern-table tbody tr:hover {
+    background-color: var(--row-hover);
+}
+
+/* Hjælpe-klasser */
+.name-cell { font-weight: 600; color: #0f172a; }
+.mono { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.9rem; }
+.char-count { text-align: right; font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
+
+/* Beskeder */
+.success-msg, .error-msg {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.success-msg { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.error-msg { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+
+/* Knapper i tabellen */
+.btn-edit, .btn-delete {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-edit { color: var(--primary-color); }
+.btn-edit:hover { background-color: #eff6ff; }
+.btn-delete { color: var(--error-color); }
+.btn-delete:hover { background-color: #fef2f2; }
+
+@media screen and (max-width: 768px) {
+    /* Giv indholdet lidt luft i siderne på mobilen */
+    .form-container, .login-container, .sms-container {
+        padding: 20px;
+        border-radius: 0; /* Ser ofte bedre ud på mobil at gå helt til kant */
+    }
+
+    #topmenu a {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px;
+    }
+
+    /* Gør knapper i tabellen lidt større, så de er nemmere at ramme med en finger */
+    .btn-edit, .btn-delete {
+        padding: 10px 15px;
+        display: block;
+        margin: 5px 0;
+    }
+}
