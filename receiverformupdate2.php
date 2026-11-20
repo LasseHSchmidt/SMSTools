@@ -1,13 +1,13 @@
 <?php
 require_once 'init.php';
 
-// 1. Logik: Håndter indsendelse af opdatering (POST)
+// 1. Logic: Handle update form submission (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
     $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
     mysqli_set_charset($con, "utf8mb4");
 
     if (!$con) {
-        die("Forbindelsesfejl: " . mysqli_connect_error());
+        die("Connection error: " . mysqli_connect_error());
     }
 
     $receiverid = $_POST['receiverid'] ?? 0;
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
     $email      = $_POST['email'] ?? '';
     $birthday   = !empty($_POST['birthday']) ? $_POST['birthday'] : "0000-00-00";
 
-    // Prepared Statement for sikkerhed
+    // Prepared statement for security
     $sql = "UPDATE $TReceivers SET 
             FullName = ?, 
             ShortName = ?, 
@@ -34,23 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
     if ($stmt->execute()) {
         $stmt->close();
         mysqli_close($con);
-        // Redirect tilbage til oversigten
+        // Redirect back to the contact list
         echo "<script>window.location.href='index.php?cmd=receivers&listid=$listid&phone=$fromphone';</script>";
         exit();
     } else {
-        $error = "Fejl ved opdatering: " . $stmt->error;
+        $error = "Error updating record: " . $stmt->error;
         $stmt->close();
         mysqli_close($con);
     }
 }
 
-// 2. Logik: Hent eksisterende data til formularen
+// 2. Logic: Fetch existing contact data for the form
 $receiverid = isset($_REQUEST['receiverid']) ? $_REQUEST['receiverid'] : 0;
 $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
 mysqli_set_charset($con, "utf8mb4");
 
 if (!$con) {
-    die("Kunne ikke forbinde til databasen");
+    die("Could not connect to database");
 }
 
 $stmt = $con->prepare("SELECT * FROM $TReceivers WHERE ReceiverId = ?");
@@ -60,7 +60,7 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
 if (!$row) {
-    die("Modtager blev ikke fundet.");
+    die(htmlspecialchars(__('err_not_found')));
 }
 
 $fullname  = $row['FullName'];
@@ -75,10 +75,10 @@ mysqli_close($con);
 ?>
 
 <div class="form-container">
-    <h2>Opdater kontakt</h2>
+    <h2><?php echo htmlspecialchars(__('update_title')); ?></h2>
 
     <?php if (isset($error)): ?>
-        <div class="error-msg"><?php echo $error; ?></div>
+        <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
     <form action="" method="post">
@@ -86,17 +86,17 @@ mysqli_close($con);
         <input type="hidden" name="listid" value="<?php echo htmlspecialchars($listid); ?>" />
         
         <div class="form-group">
-            <label for="fullname">Fuldt navn</label>
+            <label for="fullname"><?php echo htmlspecialchars(__('label_fullname')); ?></label>
             <input type="text" id="fullname" name="fullname" value="<?php echo htmlspecialchars($fullname); ?>" required />
         </div>
 
         <div class="form-group">
-            <label for="shortname">Fornavn (Kaldenavn)</label>
+            <label for="shortname"><?php echo htmlspecialchars(__('label_shortname')); ?></label>
             <input type="text" id="shortname" name="shortname" value="<?php echo htmlspecialchars($shortname); ?>" />
         </div>
 
         <div class="form-group">
-            <label for="cellphone">Mobilnummer</label>
+            <label for="cellphone"><?php echo htmlspecialchars(__('col_mobile')); ?></label>
             <input type="text" id="cellphone" name="cellphone" value="<?php echo htmlspecialchars($cellphone); ?>" required />
         </div>
 
@@ -104,6 +104,6 @@ mysqli_close($con);
         <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>" />
         <input type="hidden" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>" />
 
-        <button type="submit" name="ok" class="submit-btn">Gem ændringer</button>
+        <button type="submit" name="ok" class="submit-btn"><?php echo htmlspecialchars(__('btn_save_changes')); ?></button>
     </form>
 </div>

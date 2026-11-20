@@ -1,21 +1,21 @@
 <?php
     require_once 'init.php';
 
-    // Vi tjekker om anmodningen er en POST og om de nødvendige ID'er er med
+    // Check if the request is a POST and the required ID is present
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiverid'])) 
     {
         $receiverid = $_POST['receiverid'];
-        // listid og phone hentes typisk via POST her, da de blev sendt med fra formen
+        // Retrieve listid and phone from POST as they were submitted with the form
         $current_listid = $_POST['listid'] ?? $listid;
         $current_phone  = $_POST['phone'] ?? $fromphone;
 
         $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
 
         if (!$con) {
-            die("Forbindelsesfejl: " . mysqli_connect_error());
+            die("Connection error: " . mysqli_connect_error());
         }
 
-        // Sikker sletning med Prepared Statement
+        // Secure deletion using a Prepared Statement
         $stmt = $con->prepare("DELETE FROM $TReceivers WHERE ReceiverId = ?");
         $stmt->bind_param("i", $receiverid);
 
@@ -23,15 +23,15 @@
             $stmt->close();
             mysqli_close($con);
 
-            // Redirect tilbage til listen
+            // Redirect back to the receiver list
             $to = "index.php?cmd=receivers&listid=$current_listid&phone=$current_phone";
             header('Location: ' . $to);
             exit();
         } else {
-            die("Fejl ved sletning: " . $stmt->error);
+            die("Error deleting record: " . $stmt->error);
         }
     } else {
-        // Hvis nogen prøver at tilgå filen direkte uden POST
+        // Redirect if accessed directly without a POST request
         header('Location: index.php');
         exit();
     }

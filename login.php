@@ -1,9 +1,9 @@
 <?php
-// 1. Logik: Håndter validering af login (POST)
+// 1. Logic: Handle login validation (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     require_once 'init.php';
 
-    // Rens input og begræns længde som i din originale kode
+    // Sanitize input and limit length
     $formuser = strtolower(substr($_POST['user'] ?? '', 0, 20));
     $formpw   = substr($_POST['password'] ?? '', 0, 20);
 
@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     mysqli_set_charset($mysqli, "utf8mb4");
 
     if (!$mysqli) {
-        die("Forbindelsesfejl: " . mysqli_connect_error());
+        die("Connection error: " . mysqli_connect_error());
     }
 
-    // Prepared Statement for at undgå SQL Injection
+    // Prepared statement to prevent SQL injection
     $stmt = $mysqli->prepare("SELECT Username, Password, ListId, CellPhone FROM $TListName WHERE Username = ? LIMIT 1");
     $stmt->bind_param("s", $formuser);
     $stmt->execute();
@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $vallistid  = $line["ListId"];
         $fromphone  = $line["CellPhone"];
 
-        // Tjek om brugernavn og kodeord matcher
+        // Check if username and password match
         if ($valuser === $formuser && $valpw === $formpw) {
             
-        // Start sessionen og husk brugeren
+            // Regenerate session ID and store user session data
             session_regenerate_id(true);
             $_SESSION['listid'] = $vallistid;
             $_SESSION['phone']  = $fromphone;
@@ -44,30 +44,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         }
     }
 
-    // Hvis login fejler
-    $error = "Ugyldigt brugernavn eller adgangskode.";
+    // Set translated error message if login fails
+    $error = __('login_error');
     if (isset($stmt)) $stmt->close();
     mysqli_close($mysqli);
 }
 ?>
 
 <div class="login-container">
-    <h2>Log ind</h2>
+    <h2><?php echo htmlspecialchars(__('login_title')); ?></h2>
 
     <?php if (isset($error)): ?>
-        <div class="error-msg"><?php echo $error; ?></div>
+        <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
     <form method="post" action="index.php?cmd=login">
         <div class="form-group">
-            <label for="user">Brugernavn</label>
+            <label for="user"><?php echo htmlspecialchars(__('login_username')); ?></label>
             <input type="text" name="user" id="user" autocomplete="username" required autofocus />
         </div>
         <div class="form-group">
-            <label for="password">Adgangskode</label>
+            <label for="password"><?php echo htmlspecialchars(__('login_password')); ?></label>
             <input type="password" name="password" id="password" autocomplete="current-password" required />
         </div>
 
-        <button type="submit" name="submit" class="login-btn">Log ind</button>
+        <button type="submit" name="submit" class="login-btn"><?php echo htmlspecialchars(__('login_btn')); ?></button>
     </form>
 </div>

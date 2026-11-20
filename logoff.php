@@ -1,10 +1,10 @@
 <?php
     session_start();
 
-    // 1. Tøm session-variablerne i hukommelsen
+    // 1. Clear all session variables in memory
     $_SESSION = array();
 
-    // 2. Hvis man vil være helt grundig, sletter man også session-cookien i browseren
+    // 2. Delete the session cookie in the browser
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
@@ -13,10 +13,10 @@
         );
     }
 
-    // 3. Ødelæg selve sessionen på serveren
+    // 3. Destroy the session on the server
     session_destroy();
 
-    // 4. Viderestil og stop scriptet
+    // 4. Redirect to the index page and stop script execution
     header("Location: index.php");
-    exit(); // Meget vigtigt for at sikre, at koden stopper her
+    exit(); // Ensure no further code is executed
 ?>
