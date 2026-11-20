@@ -11,7 +11,6 @@
     --text-muted: #64748b;
 }
 
-/* Basic setup */
 body {
     font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
     margin: 0;
@@ -21,21 +20,19 @@ body {
     justify-content: center;
 }
 
-/* Wrapper constraining width to 1000px */
 .wrapper {
-    width: 100%;            /* Fills the screen on mobile */
-    max-width: 1000px;      /* Caps at 1000px on desktop */
+    width: 100%;            
+    max-width: 1000px;      
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box; /* Prevents padding from expanding total width */
+    box-sizing: border-box; 
 }
 
-/* --- BANNER SECTION --- */
 #banner {
-    width: 100%;            /* Scales with the screen */
+    width: 100%;            
     max-width: 1000px;
-    height: auto;           /* Preserves image aspect ratio */
+    height: auto;           
     margin: 0;
     padding: 0;
     background-color: #fff;
@@ -43,14 +40,13 @@ body {
 }
 
 #banner img {
-    width: 100%;            /* Scales with the screen */
+    width: 100%;            
     max-width: 1000px;
-    height: auto;           /* Preserves image aspect ratio */
+    height: auto;           
     display: block;
     image-rendering: -webkit-optimize-contrast;
 }
 
-/* --- MENU SECTION --- */
 #topmenu {
     width: 100%;
     max-width: 1000px;
@@ -58,14 +54,13 @@ body {
     margin: 0;
     padding: 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+    border-radius: 0 0 12px 12px; 
     overflow: hidden;
 
-    /* --- STICKY POSITIONING --- */
-    position: -webkit-sticky; /* For Safari */
+    position: -webkit-sticky; 
     position: sticky;
-    top: 0;                   /* Sticks to the top of the viewport */
-    z-index: 1000;            /* Ensures menu stays above tables and content */
+    top: 0;                  
+    z-index: 1000;           
 }
 
 #topmenu ul {
@@ -73,12 +68,10 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    /* Makes the menu horizontally scrollable on mobile */
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch; 
 }
 
-/* Hide scrollbar while preserving scroll functionality */
 #topmenu ul::-webkit-scrollbar {
     display: none;
 }
@@ -92,7 +85,7 @@ body {
     padding: 14px 22px;
     text-decoration: none;
     color: white;
-    white-space: nowrap; /* Prevents menu text from wrapping onto two lines */
+    white-space: nowrap; 
     font-weight: 500;
     font-size: 0.95rem;
     transition: all 0.2s ease;
@@ -118,18 +111,17 @@ body {
     color: white;
 }
 
-/* --- FORM & LOGIN CONTAINERS --- */
 .container {
-    width: 100%;            /* Fills the screen on mobile */
-    max-width: 1000px;      /* Caps at 1000px on desktop */
+    width: 100%;            
+    max-width: 1000px;     
     margin: 0 auto;
     padding: 0;
-    box-sizing: border-box; /* Prevents padding from expanding total width */
+    box-sizing: border-box; 
 }
 
 .form-container, .login-container, .sms-container {
-    width: 100%;            /* Fills the screen on mobile */
-    max-width: 1000px;      /* Caps at 1000px on desktop */
+    width: 100%;            
+    max-width: 1000px;      
     margin: 25px auto;
     padding: 30px;
     background: #ffffff;
@@ -148,7 +140,6 @@ body {
     padding-bottom: 12px;
 }
 
-/* Form elements */
 .form-group {
     margin-bottom: 18px;
 }
@@ -167,3 +158,127 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.submit-btn, .login-btn, .send-btn {
+    width: 100%;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn { background-color: var(--success-color); }
+.submit-btn:hover { background-color: #059669; }
+
+.login-btn, .send-btn { background-color: var(--primary-color); }
+.login-btn:hover, .send-btn:hover { background-color: #1d4ed8; }
+
+.table-container {
+    width: 100%;
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+    margin-top: 0px;
+    border-radius: 12px;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px; 
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 25px;
+}
+
+.modern-table th {
+    background-color: var(--header-bg);
+    color: #ffffff;
+    padding: 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.modern-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.modern-table tbody tr:nth-child(even) {
+    background-color: var(--row-even);
+}
+
+.modern-table tbody tr:hover {
+    background-color: var(--row-hover);
+}
+
+.name-cell { font-weight: 600; color: #0f172a; }
+.mono { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 0.9rem; }
+.char-count { text-align: right; font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
+
+.success-msg, .error-msg {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.success-msg { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.error-msg { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+
+.btn-edit, .btn-delete {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-edit { color: var(--primary-color); }
+.btn-edit:hover { background-color: #eff6ff; }
+.btn-delete { color: var(--error-color); }
+.btn-delete:hover { background-color: #fef2f2; }
+
+@media screen and (max-width: 768px) {
+    .form-container, .login-container, .sms-container {
+        padding: 20px;
+        border-radius: 0; 
+    }
+
+    #topmenu a {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px;
+    }
+
+    .btn-edit, .btn-delete {
+        padding: 10px 15px;
+        display: block;
+        margin: 5px 0;
+    }
+}
