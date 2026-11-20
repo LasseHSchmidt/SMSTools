@@ -1,0 +1,16 @@
+# Ignore version control and documentation
+.git
+.gitignore
+.github
+*.md
+
+# Ignore environment and local data files
+.env
+.env.example
+db-data
+.DS_Store
+
+# Ignore Docker build configuration
+Dockerfile
+docker-compose.yml
+.dockerignore

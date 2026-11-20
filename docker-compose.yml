@@ -1,26 +1,25 @@
 services:
   sms-tools-web:
-    build: .
+    # Pull pre-built image from GitHub Container Registry
+    image: ghcr.io/lassehschmidt/smstools:latest
     container_name: sms-tools-web
     restart: unless-stopped
     ports:
       - "8088:80"
     environment:
+      # Database connection settings
       DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
+      # GatewayAPI credentials
       API_URL: ${API_URL}
       API_TOKEN: ${API_TOKEN}
+      # Default SMS group user synced to SMSGroups table on startup
       SMS_GROUP_ID: ${SMS_GROUP_ID}
       SMS_GROUP_USER: ${SMS_GROUP_USER}
       SMS_GROUP_PASS: ${SMS_GROUP_PASS}
       SMS_GROUP_PHONE: ${SMS_GROUP_PHONE}
-    volumes:
-      - ./src:/var/www/html
-      - ./src/php.ini:/usr/local/etc/php/conf.d/custom.ini
-      - ./db_init.php:/usr/local/bin/db_init.php:ro
-    command: ["sh", "-c", "php /usr/local/bin/db_init.php && apache2-foreground"]
     depends_on:
       - sms-tools-db
     networks:
@@ -36,6 +35,7 @@ services:
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASS}
     volumes:
+      # Persist database files on the host
       - ./db-data:/var/lib/mysql
     networks:
       - sms-net

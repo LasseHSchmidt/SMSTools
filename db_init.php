@@ -6,7 +6,7 @@ $user = Config::dbUser();
 $pass = Config::dbPass();
 $name = Config::dbName();
 
-// Vent op til 30 sekunder på at MariaDB er klar
+// Wait up to 30 seconds for MariaDB to become ready
 $mysqli = null;
 for ($i = 0; $i < 30; $i++) {
     $mysqli = @mysqli_connect($host, $user, $pass, $name);
@@ -15,13 +15,13 @@ for ($i = 0; $i < 30; $i++) {
 }
 
 if (!$mysqli) {
-    fwrite(STDERR, "Kunne ikke forbinde til databasen under opstart.\n");
+    fwrite(STDERR, "Could not connect to database during startup.\n");
     exit(1);
 }
 
 mysqli_set_charset($mysqli, "utf8mb4");
 
-// 1. Opret tabeller hvis de ikke findes
+// 1. Create required tables if they do not exist
 $tGroups    = Config::TABLE_LISTNAME;
 $tReceivers = Config::TABLE_RECEIVERS;
 $tLog       = Config::TABLE_SENDSMS;
@@ -59,7 +59,7 @@ mysqli_query($mysqli, "
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ");
 
-// 2. Indsæt eller opdater posten i SMSGroups baseret på .env
+// 2. Insert or update the default SMSGroups entry from environment variables
 $groupId    = (int)(getenv('SMS_GROUP_ID') ?: 1);
 $groupUser  = getenv('SMS_GROUP_USER');
 $groupPass  = getenv('SMS_GROUP_PASS');
@@ -77,7 +77,7 @@ if ($groupUser && $groupPass && $groupPhone) {
     $stmt->bind_param("isss", $groupId, $groupUser, $groupPass, $groupPhone);
     $stmt->execute();
     $stmt->close();
-    echo "SMSGroups synkroniseret med .env for ListId=$groupId ($groupUser).\n";
+    echo "SMSGroups synced with environment variables for ListId=$groupId ($groupUser).\n";
 }
 
 mysqli_close($mysqli);
