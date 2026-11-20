@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
+require_once 'lang.php';
 
 $cmd        = isset($_GET['cmd'])    ? $_GET['cmd']    : 'receivers';
 
