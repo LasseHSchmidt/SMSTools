@@ -73,7 +73,6 @@
                         'receivers'          => 'receivers2.php',
                         'receiverformupdate' => 'receiverformupdate2.php',
                         'receiverforminsert' => 'receiverforminsert2.php',
-                        'sms2oneform'        => 'sms2oneform.php',
                         'sms2allform'        => 'sms2allform.php',
                         'smsstatus'          => 'smsstatus2.php',
                     ];
