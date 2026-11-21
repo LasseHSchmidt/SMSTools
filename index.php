@@ -1,6 +1,3 @@
-cd /Users/lasseh.schmidt/GitHub/SMSTools
-
-cat << 'EOF' > index.php
 <?php
     ob_start();
     require_once 'init.php';
@@ -90,4 +87,3 @@ cat << 'EOF' > index.php
 
 </body>
 </html>
-EOF
