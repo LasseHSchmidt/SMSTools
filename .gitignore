@@ -1,3 +1,17 @@
+# Environment & secrets
 .env
+.env.*
+!.env.example
+
+# Local database & backups
 db-data/
+*.sql
+*.sqlite
+
+# Logs
+*.log
+
+# OS & Editor files
 .DS_Store
+.vscode/
+.idea/
