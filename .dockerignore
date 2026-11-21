@@ -4,11 +4,18 @@
 .github
 *.md
 
-# Ignore environment and local data files
+# Ignore environment, backups, logs, and local data files
 .env
-.env.example
+.env.*
 db-data
+*.sql
+*.sqlite
+*.log
+
+# Ignore OS & Editor files
 .DS_Store
+.vscode
+.idea
 
 # Ignore Docker build configuration
 Dockerfile
