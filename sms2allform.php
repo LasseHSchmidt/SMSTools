@@ -4,9 +4,10 @@ require_once 'init.php';
 // 1. Logic: Handle SMS dispatch (POST)
 $feedback = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
+    verify_csrf();
     
     $message = $_POST['message'] ?? '';
-    // Always use $listid from the authenticated session to prevent IDOR
+    // Always use $listid from the authenticated session
     $current_listid = (int)$listid;
 
     if (!empty($message) && $current_listid > 0) {
@@ -94,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
     <?php echo $feedback; ?>
 
     <form action="" method="post" id="smsForm">
+        <?php echo csrf_field(); ?>
         <input type="hidden" name="listid" value="<?php echo htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8'); ?>" />
 
         <div class="form-group">

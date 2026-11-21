@@ -1,38 +1,33 @@
 <?php
-    require_once 'init.php';
-    // This file must be included via index.php so $listid and $fromphone are available
+require_once 'init.php';
 
 // 1. Logic: Handle form submission (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
-    
-    // Connect using database settings from init.php / Config
-    $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
-    mysqli_set_charset($con, "utf8mb4");
+    verify_csrf();
 
+    $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
     if (!$con) {
         die("Connection error: " . mysqli_connect_error());
     }
+    mysqli_set_charset($con, "utf8mb4");
 
     // Sanitize and prepare input data
-    $fullname   = $_POST['fullname'] ?? '';
-    $shortname  = $_POST['shortname'] ?? '';
-    $cellphone  = $_POST['cellphone'] ?? '';
-    $phone      = !empty($_POST['phone']) ? $_POST['phone'] : 0;
-    $email      = $_POST['email'] ?? '';
+    $fullname   = trim($_POST['fullname'] ?? '');
+    $shortname  = trim($_POST['shortname'] ?? '');
+    $cellphone  = trim($_POST['cellphone'] ?? '');
+    $phone      = !empty($_POST['phone']) ? $_POST['phone'] : '0';
+    $email      = trim($_POST['email'] ?? '');
     $birthday   = !empty($_POST['birthday']) ? $_POST['birthday'] : "0000-00-00";
 
     // Prepared statement to prevent SQL injection
     $query = "INSERT INTO $TReceivers (ListId, FullName, ShortName, CellPhone, Phone, Email, BirthDay) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $con->prepare($query);
-    
-    // "issssss" = integer, string, string, string, string, string, string
     $stmt->bind_param("issssss", $listid, $fullname, $shortname, $cellphone, $phone, $email, $birthday);
 
     if ($stmt->execute()) {
         $stmt->close();
         mysqli_close($con);
 
-        // Redirect back to the contact list on success
         $to = "index.php?cmd=receivers&listid=$listid&phone=$fromphone";
         header('Location: ' . $to);
         exit();
@@ -42,32 +37,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
         mysqli_close($con);
     }
 }
-
-// 2. View: Contact creation form
 ?>
 
 <div class="form-container">
-    <h2><?php echo htmlspecialchars(__('insert_title')); ?></h2>
+    <h2><?php echo htmlspecialchars(__('insert_title'), ENT_QUOTES, 'UTF-8'); ?></h2>
 
     <?php if (isset($error)): ?>
-        <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
+        <div class="error-msg"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <form action="" method="post">
-        <input type="hidden" name="listid" value="<?php echo htmlspecialchars($listid); ?>" />
+        <?php echo csrf_field(); ?>
+        <input type="hidden" name="listid" value="<?php echo htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8'); ?>" />
         
         <div class="form-group">
-            <label for="fullname"><?php echo htmlspecialchars(__('label_fullname')); ?></label>
-            <input type="text" id="fullname" name="fullname" placeholder="<?php echo htmlspecialchars(__('ph_fullname')); ?>" required onblur="copyFirstName()" />
+            <label for="fullname"><?php echo htmlspecialchars(__('label_fullname'), ENT_QUOTES, 'UTF-8'); ?></label>
+            <input type="text" id="fullname" name="fullname" placeholder="<?php echo htmlspecialchars(__('ph_fullname'), ENT_QUOTES, 'UTF-8'); ?>" required onblur="copyFirstName()" />
         </div>
 
         <div class="form-group">
-            <label for="shortname"><?php echo htmlspecialchars(__('label_shortname')); ?></label>
-            <input type="text" id="shortname" name="shortname" placeholder="<?php echo htmlspecialchars(__('ph_shortname')); ?>" />
+            <label for="shortname"><?php echo htmlspecialchars(__('label_shortname'), ENT_QUOTES, 'UTF-8'); ?></label>
+            <input type="text" id="shortname" name="shortname" placeholder="<?php echo htmlspecialchars(__('ph_shortname'), ENT_QUOTES, 'UTF-8'); ?>" />
         </div>
 
         <div class="form-group">
-            <label for="cellphone"><?php echo htmlspecialchars(__('label_cellphone')); ?></label>
+            <label for="cellphone"><?php echo htmlspecialchars(__('label_cellphone'), ENT_QUOTES, 'UTF-8'); ?></label>
             <input type="text" 
                     id="cellphone" 
                     name="cellphone" 
@@ -82,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
         <input type="hidden" name="email" />
         <input type="hidden" name="birthday" />
 
-        <button type="submit" name="ok" class="submit-btn"><?php echo htmlspecialchars(__('btn_save_contact')); ?></button>
+        <button type="submit" name="ok" class="submit-btn"><?php echo htmlspecialchars(__('btn_save_contact'), ENT_QUOTES, 'UTF-8'); ?></button>
     </form>
 </div>
 
@@ -91,11 +85,9 @@ function copyFirstName() {
     var fullNameInput = document.getElementById('fullname');
     var shortNameInput = document.getElementById('shortname');
 
-    // Auto-fill shortname only if it is currently empty
     if (shortNameInput.value.trim() === "") {
         var name = fullNameInput.value.trim();
         if (name !== "") {
-            // Split the string by spaces and extract the first element
             var firstName = name.split(' ')[0];
             shortNameInput.value = firstName;
         }

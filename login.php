@@ -2,6 +2,7 @@
 // 1. Logic: Handle login validation (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     require_once 'init.php';
+    verify_csrf();
 
     // Sanitize username input
     $formuser = strtolower(trim(substr($_POST['user'] ?? '', 0, 50)));
@@ -29,9 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Verify username and hashed password
         if ($valuser === $formuser && password_verify($formpw, $valpw)) {
             session_regenerate_id(true);
-            $_SESSION['listid']    = $vallistid;
-            $_SESSION['phone']     = $fromphone;
-            $_SESSION['logged_in'] = true;
+            $_SESSION['listid']     = $vallistid;
+            $_SESSION['phone']      = $fromphone;
+            $_SESSION['logged_in']  = true;
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
             $stmt->close();
             mysqli_close($mysqli);
@@ -49,22 +51,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 ?>
 
 <div class="login-container">
-    <h2><?php echo htmlspecialchars(function_exists('__') ? __('login_title') : 'Log in'); ?></h2>
+    <h2><?php echo htmlspecialchars(function_exists('__') ? __('login_title') : 'Log in', ENT_QUOTES, 'UTF-8'); ?></h2>
 
     <?php if (isset($error)): ?>
-        <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
+        <div class="error-msg"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <form method="post" action="index.php?cmd=login">
+        <?php echo csrf_field(); ?>
         <div class="form-group">
-            <label for="user"><?php echo htmlspecialchars(function_exists('__') ? __('login_username') : 'Username'); ?></label>
+            <label for="user"><?php echo htmlspecialchars(function_exists('__') ? __('login_username') : 'Username', ENT_QUOTES, 'UTF-8'); ?></label>
             <input type="text" name="user" id="user" autocomplete="username" required autofocus />
         </div>
         <div class="form-group">
-            <label for="password"><?php echo htmlspecialchars(function_exists('__') ? __('login_password') : 'Password'); ?></label>
+            <label for="password"><?php echo htmlspecialchars(function_exists('__') ? __('login_password') : 'Password', ENT_QUOTES, 'UTF-8'); ?></label>
             <input type="password" name="password" id="password" autocomplete="current-password" required />
         </div>
 
-        <button type="submit" name="submit" class="login-btn"><?php echo htmlspecialchars(function_exists('__') ? __('login_btn') : 'Log in'); ?></button>
+        <button type="submit" name="submit" class="login-btn"><?php echo htmlspecialchars(function_exists('__') ? __('login_btn') : 'Log in', ENT_QUOTES, 'UTF-8'); ?></button>
     </form>
 </div>

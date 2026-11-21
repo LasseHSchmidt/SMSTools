@@ -30,9 +30,9 @@ $results = $stmt->get_result();
     <table class="modern-table">
         <thead>
             <tr>
-                <th><?php echo htmlspecialchars(__('col_name')); ?></th>
-                <th><?php echo htmlspecialchars(__('col_firstname')); ?></th>
-                <th><?php echo htmlspecialchars(__('col_mobile')); ?></th>
+                <th><?php echo htmlspecialchars(__('col_name'), ENT_QUOTES, 'UTF-8'); ?></th>
+                <th><?php echo htmlspecialchars(__('col_firstname'), ENT_QUOTES, 'UTF-8'); ?></th>
+                <th><?php echo htmlspecialchars(__('col_mobile'), ENT_QUOTES, 'UTF-8'); ?></th>
                 <th colspan="2" style="text-align: center;"></th>
             </tr>
         </thead>
@@ -45,25 +45,26 @@ $results = $stmt->get_result();
                 $cellphone  = ($line["CellPhone"] == "0") ? "" : $line["CellPhone"];
                 ?>
                 <tr>
-                    <td class="name-cell"><?php echo htmlspecialchars($fullname); ?></td>
-                    <td><?php echo htmlspecialchars($shortname); ?></td>
-                    <td class="mono"><?php echo htmlspecialchars($cellphone); ?></td>
+                    <td class="name-cell"><?php echo htmlspecialchars((string)$fullname, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars((string)$shortname, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td class="mono"><?php echo htmlspecialchars((string)$cellphone, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td class="action-cell">
-                        <a href="index.php?cmd=receiverformupdate&receiverid=<?php echo htmlspecialchars($receiverid); ?>&listid=<?php echo htmlspecialchars($listid); ?>&phone=<?php echo htmlspecialchars($fromphone); ?>" class="btn-edit">
-                            <?php echo htmlspecialchars(__('btn_edit')); ?>
+                        <a href="index.php?cmd=receiverformupdate&receiverid=<?php echo htmlspecialchars((string)$receiverid, ENT_QUOTES, 'UTF-8'); ?>&listid=<?php echo htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8'); ?>&phone=<?php echo htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8'); ?>" class="btn-edit">
+                            <?php echo htmlspecialchars(__('btn_edit'), ENT_QUOTES, 'UTF-8'); ?>
                         </a>
                     </td>
                     <td class="action-cell">
                         <form action="receiverdelete2.php" method="post" style="display:inline;">
-                            <input type="hidden" name="receiverid" value="<?php echo htmlspecialchars($receiverid); ?>">
-                            <input type="hidden" name="listid" value="<?php echo htmlspecialchars($listid); ?>">
-                            <input type="hidden" name="phone" value="<?php echo htmlspecialchars($fromphone); ?>">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="receiverid" value="<?php echo htmlspecialchars((string)$receiverid, ENT_QUOTES, 'UTF-8'); ?>">
+                            <input type="hidden" name="listid" value="<?php echo htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8'); ?>">
+                            <input type="hidden" name="phone" value="<?php echo htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8'); ?>">
                             
                             <button type="submit" 
                                     class="btn-delete" 
                                     onclick="return confirm(<?php echo htmlspecialchars(json_encode(__('confirm_delete')), ENT_QUOTES, 'UTF-8'); ?>)"
                                     style="cursor:pointer; border:none; background:none; padding:0; font:inherit;">
-                                <?php echo htmlspecialchars(__('btn_delete')); ?>
+                                <?php echo htmlspecialchars(__('btn_delete'), ENT_QUOTES, 'UTF-8'); ?>
                             </button>
                         </form>
                     </td>

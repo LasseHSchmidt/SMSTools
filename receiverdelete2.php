@@ -1,38 +1,39 @@
 <?php
-    require_once 'init.php';
+require_once 'init.php';
 
-    // Check if the request is a POST and the required ID is present
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiverid'])) 
-    {
-        $receiverid = $_POST['receiverid'];
-        // Retrieve listid and phone from POST as they were submitted with the form
-        $current_listid = $_POST['listid'] ?? $listid;
-        $current_phone  = $_POST['phone'] ?? $fromphone;
-
-        $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
-
-        if (!$con) {
-            die("Connection error: " . mysqli_connect_error());
-        }
-
-        // Secure deletion using a Prepared Statement
-        $stmt = $con->prepare("DELETE FROM $TReceivers WHERE ReceiverId = ?");
-        $stmt->bind_param("i", $receiverid);
-
-        if ($stmt->execute()) {
-            $stmt->close();
-            mysqli_close($con);
-
-            // Redirect back to the receiver list
-            $to = "index.php?cmd=receivers&listid=$current_listid&phone=$current_phone";
-            header('Location: ' . $to);
-            exit();
-        } else {
-            die("Error deleting record: " . $stmt->error);
-        }
-    } else {
-        // Redirect if accessed directly without a POST request
-        header('Location: index.php');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiverid'])) {
+    if (!$isLoggedIn) {
+        header('Location: index.php?cmd=login');
         exit();
     }
+
+    verify_csrf();
+
+    $receiverid     = (int)$_POST['receiverid'];
+    $current_listid = (int)$listid;
+    $current_phone  = $fromphone;
+
+    $con = mysqli_connect($DBhost, $DBuser, $DBpass, $DBName);
+    if (!$con) {
+        die("Connection error: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($con, "utf8mb4");
+
+    // Scope deletion to both ReceiverId and the authenticated session's ListId
+    $stmt = $con->prepare("DELETE FROM $TReceivers WHERE ReceiverId = ? AND ListId = ?");
+    $stmt->bind_param("ii", $receiverid, $current_listid);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        mysqli_close($con);
+
+        header("Location: index.php?cmd=receivers&listid=$current_listid&phone=$current_phone");
+        exit();
+    } else {
+        die("Error deleting record: " . $stmt->error);
+    }
+} else {
+    header('Location: index.php');
+    exit();
+}
 ?>
