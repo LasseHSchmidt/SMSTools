@@ -1,10 +1,10 @@
 <?php
-require_once '/var/www/html/config.php';
-
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
     exit('Forbidden');
 }
+
+require_once '/var/www/html/config.php';
 
 $host = Config::dbHost();
 $user = Config::dbUser();
@@ -35,10 +35,13 @@ mysqli_query($mysqli, "
     CREATE TABLE IF NOT EXISTS `$tGroups` (
         ListId INT AUTO_INCREMENT PRIMARY KEY,
         Username VARCHAR(50) NOT NULL,
-        Password VARCHAR(50) NOT NULL,
+        Password VARCHAR(255) NOT NULL,
         CellPhone VARCHAR(20) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ");
+
+// Ensure existing databases have enough space for password hashes
+mysqli_query($mysqli, "ALTER TABLE `$tGroups` MODIFY Password VARCHAR(255) NOT NULL;");
 
 mysqli_query($mysqli, "
     CREATE TABLE IF NOT EXISTS `$tReceivers` (
@@ -64,22 +67,39 @@ mysqli_query($mysqli, "
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ");
 
-// 2. Insert or update the default SMSGroups entry from environment variables
+// 2. Insert or update the default SMSGroups entry with a hashed password
 $groupId    = (int)(getenv('SMS_GROUP_ID') ?: 1);
 $groupUser  = getenv('SMS_GROUP_USER');
 $groupPass  = getenv('SMS_GROUP_PASS');
 $groupPhone = getenv('SMS_GROUP_PHONE');
 
 if ($groupUser && $groupPass && $groupPhone) {
-    $stmt = $mysqli->prepare("
-        INSERT INTO `$tGroups` (ListId, Username, Password, CellPhone)
-        VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-            Username = VALUES(Username),
-            Password = VALUES(Password),
-            CellPhone = VALUES(CellPhone)
-    ");
-    $stmt->bind_param("isss", $groupId, $groupUser, $groupPass, $groupPhone);
+    $hashedPass = password_hash($groupPass, PASSWORD_DEFAULT);
+
+    // Check if row already exists so we only re-hash when the password actually changes
+    $checkStmt = $mysqli->prepare("SELECT Password FROM `$tGroups` WHERE ListId = ? LIMIT 1");
+    $checkStmt->bind_param("i", $groupId);
+    $checkStmt->execute();
+    $res = $checkStmt->get_result()->fetch_assoc();
+    $checkStmt->close();
+
+    if ($res && password_verify($groupPass, $res['Password'])) {
+        // Password matches existing hash; only update Username and CellPhone
+        $stmt = $mysqli->prepare("UPDATE `$tGroups` SET Username = ?, CellPhone = ? WHERE ListId = ?");
+        $stmt->bind_param("ssi", $groupUser, $groupPhone, $groupId);
+    } else {
+        // Insert new row or update with new hashed password
+        $stmt = $mysqli->prepare("
+            INSERT INTO `$tGroups` (ListId, Username, Password, CellPhone)
+            VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                Username = VALUES(Username),
+                Password = VALUES(Password),
+                CellPhone = VALUES(CellPhone)
+        ");
+        $stmt->bind_param("isss", $groupId, $groupUser, $hashedPass, $groupPhone);
+    }
+
     $stmt->execute();
     $stmt->close();
     echo "SMSGroups synced with environment variables for ListId=$groupId ($groupUser).\n";
