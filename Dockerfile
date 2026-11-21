@@ -1,5 +1,5 @@
 # Use official PHP 8.2 with Apache as base image
-FROM php:8.2-apache
+FROM php:8.5-apache
 
 # Add OCI labels to link the container image to the GitHub repository
 LABEL org.opencontainers.image.source="https://github.com/LasseHSchmidt/SMSTools"
