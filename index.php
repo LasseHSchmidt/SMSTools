@@ -34,9 +34,9 @@
                 $safe_phone  = htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8');
 
                 if ($listid) {
-                    echo "<a href='index.php?cmd=receivers&listid={$safe_listid}&phone={$safe_phone}'><img src='banner2.jpg' alt='SMS Tools Banner'></a>"; 
+                    echo "<a href='index.php?cmd=receivers&listid={$safe_listid}&phone={$safe_phone}'><img src='banner2.svg' alt='SMS Tools Banner'></a>"; 
                 } else {
-                    echo "<a href='index.php'><img src='banner2.jpg' alt='SMS Tools Banner'></a>"; 
+                    echo "<a href='index.php'><img src='banner2.svg' alt='SMS Tools Banner'></a>"; 
                 }
             ?>
         </header>

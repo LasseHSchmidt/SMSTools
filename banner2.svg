@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 170" width="1000" height="170">
+  <defs>
+    <!-- Main background gradient matching banner2.jpg -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3f464d"/>
+      <stop offset="28%" stop-color="#485665"/>
+      <stop offset="55%" stop-color="#2866a3"/>
+      <stop offset="100%" stop-color="#1967b2"/>
+    </linearGradient>
+
+    <!-- Bottom light diagonal bar gradient -->
+    <linearGradient id="bottomBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5d8fc2" stop-opacity="0.35"/>
+      <stop offset="55%" stop-color="#8bb8e8" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#dbe9f8" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Subtle top highlight -->
+    <linearGradient id="topGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base background -->
+  <rect width="1000" height="170" fill="url(#bgGrad)"/>
+  <rect width="1000" height="60" fill="url(#topGlow)"/>
+
+  <!-- Bottom angled accent bar (without domain text) -->
+  <polygon points="340,170 430,132 1000,132 1000,170" fill="url(#bottomBarGrad)"/>
+
+  <!-- Subtle circuit board lines on the right side -->
+  <g stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5" fill="none">
+    <polyline points="420,18 650,18 685,48 860,48"/>
+    <circle cx="863" cy="48" r="3"/>
+
+    <polyline points="620,0 660,34 780,34 815,68 960,68"/>
+    <circle cx="963" cy="68" r="3"/>
+
+    <polyline points="750,0 795,40 920,40"/>
+    <circle cx="923" cy="40" r="3"/>
+
+    <polyline points="510,152 555,112 720,112 750,142 890,142"/>
+    <circle cx="507" cy="152" r="3"/>
+    <circle cx="893" cy="142" r="3"/>
+
+    <polyline points="610,162 645,126 830,126"/>
+    <circle cx="833" cy="126" r="3"/>
+  </g>
+
+  <!-- Left SMS Speech Bubble + Signal Waves Icon -->
+  <g transform="translate(52, 34)">
+    <!-- Speech bubble -->
+    <path d="M12,24 H66 A10,10 0 0 1 76,34 V68 A10,10 0 0 1 66,78 H34 L18,93 V78 H12 A10,10 0 0 1 2,68 V34 A10,10 0 0 1 12,24 Z"
+          fill="none" stroke="#1e88e5" stroke-width="4.5" stroke-linejoin="round"/>
+    <!-- Message lines inside bubble -->
+    <line x1="17" y1="45" x2="55" y2="45" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="17" y1="58" x2="43" y2="58" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+    <!-- Signal arcs top-right of bubble -->
+    <path d="M68,14 A22,22 0 0 1 88,34" fill="none" stroke="#1e88e5" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M68,2 A34,34 0 0 1 100,34" fill="none" stroke="#1e88e5" stroke-width="4.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Main Title: "SMS Tools" -->
+  <text x="168" y="103" font-family="'Inter', 'Segoe UI', Arial, sans-serif" font-size="56" letter-spacing="-0.5">
+    <tspan font-weight="800" fill="#1e88e5">SMS</tspan>
+    <tspan font-weight="300" fill="#ffffff" dx="8">Tools</tspan>
+  </text>
+
+  <!-- Subtle Radio Tower Icon (right-center) -->
+  <g transform="translate(665, 32)" stroke="#ffffff" stroke-opacity="0.24" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Tower legs and crossbars -->
+    <line x1="25" y1="26" x2="11" y2="88"/>
+    <line x1="25" y1="26" x2="39" y2="88"/>
+    <line x1="18" y1="56" x2="32" y2="56"/>
+    <line x1="14" y1="74" x2="36" y2="74"/>
+    <line x1="18" y1="56" x2="36" y2="74"/>
+    <line x1="32" y1="56" x2="14" y2="74"/>
+    <!-- Transmitter dot & waves -->
+    <circle cx="25" cy="22" r="3" fill="#ffffff" fill-opacity="0.3"/>
+    <path d="M15,13 A14,14 0 0 0 15,31"/>
+    <path d="M35,13 A14,14 0 0 1 35,31"/>
+    <path d="M8,7 A23,23 0 0 0 8,37"/>
+    <path d="M42,7 A23,23 0 0 1 42,37"/>
+  </g>
+
+  <!-- Subtle Secondary Chat Bubble Icon (far right) -->
+  <g transform="translate(905, 34)" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2.2" fill="none" stroke-linejoin="round">
+    <path d="M6,4 H44 A6,6 0 0 1 50,10 V32 A6,6 0 0 1 44,38 H22 L12,48 V38 H6 A6,6 0 0 1 0,32 V10 A6,6 0 0 1 6,4 Z"/>
+    <line x1="11" y1="16" x2="38" y2="16" stroke-linecap="round"/>
+    <line x1="11" y1="24" x2="30" y2="24" stroke-linecap="round"/>
+  </g>
+</svg>
