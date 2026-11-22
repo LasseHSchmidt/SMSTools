@@ -15,30 +15,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     mysqli_set_charset($mysqli, "utf8mb4");
 
     // Prepared statement to prevent SQL injection
-    $stmt = $mysqli->prepare("SELECT Username, Password, ListId, CellPhone FROM $TListName WHERE Username = ? LIMIT 1");
+    $stmt = $mysqli->prepare("SELECT Username, Password, ListId, CellPhone, MustChangePassword FROM $TListName WHERE Username = ? LIMIT 1");
     $stmt->bind_param("s", $formuser);
     $stmt->execute();
     $result = $stmt->get_result();
     $line = $result->fetch_assoc();
 
     if ($line) {
-        $valuser   = strtolower($line["Username"]);
-        $valpw     = $line["Password"];
-        $vallistid = $line["ListId"];
-        $fromphone = $line["CellPhone"];
+        $valuser    = strtolower($line["Username"]);
+        $valpw      = $line["Password"];
+        $vallistid  = $line["ListId"];
+        $fromphone  = $line["CellPhone"];
+        $mustChange = (int)($line["MustChangePassword"] ?? 0) === 1;
 
         // Verify username and hashed password
         if ($valuser === $formuser && password_verify($formpw, $valpw)) {
             session_regenerate_id(true);
-            $_SESSION['listid']     = $vallistid;
-            $_SESSION['phone']      = $fromphone;
-            $_SESSION['logged_in']  = true;
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            $_SESSION['listid']               = $vallistid;
+            $_SESSION['phone']                = $fromphone;
+            $_SESSION['logged_in']            = true;
+            $_SESSION['must_change_password'] = $mustChange;
+            $_SESSION['csrf_token']           = bin2hex(random_bytes(32));
 
             $stmt->close();
             mysqli_close($mysqli);
 
-            header("Location: index.php?cmd=receivers&listid=$vallistid&phone=$fromphone");
+            if ($mustChange) {
+                header("Location: index.php?cmd=changepassword");
+            } else {
+                header("Location: index.php?cmd=receivers&listid=$vallistid&phone=$fromphone");
+            }
             exit();
         }
     }

@@ -44,12 +44,14 @@
         <nav id="topmenu">
             <ul>
                 <?php
-                    // Show navigation links only when logged in
+                    // I <nav id="topmenu"> i index.php:
                     if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-                        echo "<li><a href='index.php?cmd=receivers&listid={$safe_listid}&phone={$safe_phone}' class='menu'>" . htmlspecialchars(__('nav_receivers'), ENT_QUOTES, 'UTF-8') . "</a></li>";
-                        echo "<li><a href='index.php?cmd=receiverforminsert&listid={$safe_listid}&phone={$safe_phone}' class='menu'>" . htmlspecialchars(__('nav_new_receiver'), ENT_QUOTES, 'UTF-8') . "</a></li>";
-                        echo "<li><a href='index.php?cmd=sms2allform&listid={$safe_listid}&phone={$safe_phone}' class='menu'>" . htmlspecialchars(__('nav_send_sms'), ENT_QUOTES, 'UTF-8') . "</a></li>";
-                        echo "<li><a href='index.php?cmd=smsstatus&listid={$safe_listid}&phone={$safe_phone}' class='menu'>" . htmlspecialchars(__('nav_sms_log'), ENT_QUOTES, 'UTF-8') . "</a></li>";
+                        if (empty($_SESSION['must_change_password'])) {
+                            echo "<li><a href='index.php?cmd=receivers&listid=" . htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8') . "&phone=" . htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8') . "' class='menu'>" . htmlspecialchars(__('nav_receivers'), ENT_QUOTES, 'UTF-8') . "</a></li>";
+                            echo "<li><a href='index.php?cmd=receiverforminsert&listid=" . htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8') . "&phone=" . htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8') . "' class='menu'>" . htmlspecialchars(__('nav_new_receiver'), ENT_QUOTES, 'UTF-8') . "</a></li>";
+                            echo "<li><a href='index.php?cmd=sms2allform&listid=" . htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8') . "&phone=" . htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8') . "' class='menu'>" . htmlspecialchars(__('nav_send_sms'), ENT_QUOTES, 'UTF-8') . "</a></li>";
+                            echo "<li><a href='index.php?cmd=smsstatus&listid=" . htmlspecialchars((string)$listid, ENT_QUOTES, 'UTF-8') . "&phone=" . htmlspecialchars((string)$fromphone, ENT_QUOTES, 'UTF-8') . "' class='menu'>" . htmlspecialchars(__('nav_sms_log'), ENT_QUOTES, 'UTF-8') . "</a></li>";
+                        }
                         echo "<li class='logout'><a href='logoff.php'>" . htmlspecialchars(__('nav_logout'), ENT_QUOTES, 'UTF-8') . "</a></li>";
                     }
 
@@ -68,14 +70,15 @@
             <div class="container">
                 <div class="content-card">
                     <?php
-                    $routes = [
-                        'login'              => 'login.php',
-                        'receivers'          => 'receivers2.php',
-                        'receiverformupdate' => 'receiverformupdate2.php',
-                        'receiverforminsert' => 'receiverforminsert2.php',
-                        'sms2allform'        => 'sms2allform.php',
-                        'smsstatus'          => 'smsstatus2.php',
-                    ];
+                        $routes = [
+                            'login'              => 'login.php',
+                            'changepassword'     => 'changepassword.php',
+                            'receivers'          => 'receivers2.php',
+                            'receiverformupdate' => 'receiverformupdate2.php',
+                            'receiverforminsert' => 'receiverforminsert2.php',
+                            'sms2allform'        => 'sms2allform.php',
+                            'smsstatus'          => 'smsstatus2.php',
+                        ];
                     
                     $file = $routes[$cmd] ?? 'receivers2.php';
                     require_once $file;

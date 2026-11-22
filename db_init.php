@@ -36,12 +36,17 @@ mysqli_query($mysqli, "
         ListId INT AUTO_INCREMENT PRIMARY KEY,
         Username VARCHAR(50) NOT NULL,
         Password VARCHAR(255) NOT NULL,
-        CellPhone VARCHAR(20) NOT NULL
+        CellPhone VARCHAR(20) NOT NULL,
+        MustChangePassword TINYINT(1) NOT NULL DEFAULT 1
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ");
 
-// Ensure existing databases have enough space for password hashes
+// Ensure existing databases have enough space for password hashes and the MustChangePassword column
 mysqli_query($mysqli, "ALTER TABLE `$tGroups` MODIFY Password VARCHAR(255) NOT NULL;");
+$colCheck = mysqli_query($mysqli, "SHOW COLUMNS FROM `$tGroups` LIKE 'MustChangePassword'");
+if ($colCheck && mysqli_num_rows($colCheck) === 0) {
+    mysqli_query($mysqli, "ALTER TABLE `$tGroups` ADD COLUMN MustChangePassword TINYINT(1) NOT NULL DEFAULT 1;");
+}
 
 mysqli_query($mysqli, "
     CREATE TABLE IF NOT EXISTS `$tReceivers` (
@@ -67,42 +72,34 @@ mysqli_query($mysqli, "
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ");
 
-// 2. Insert or update the default SMSGroups entry with a hashed password
+// 2. Insert initial default SMSGroups entry ONLY if it does not already exist
 $groupId    = (int)(getenv('SMS_GROUP_ID') ?: 1);
 $groupUser  = getenv('SMS_GROUP_USER');
 $groupPass  = getenv('SMS_GROUP_PASS');
 $groupPhone = getenv('SMS_GROUP_PHONE');
 
 if ($groupUser && $groupPass && $groupPhone) {
-    $hashedPass = password_hash($groupPass, PASSWORD_DEFAULT);
-
-    // Check if row already exists so we only re-hash when the password actually changes
-    $checkStmt = $mysqli->prepare("SELECT Password FROM `$tGroups` WHERE ListId = ? LIMIT 1");
+    $checkStmt = $mysqli->prepare("SELECT ListId FROM `$tGroups` WHERE ListId = ? LIMIT 1");
     $checkStmt->bind_param("i", $groupId);
     $checkStmt->execute();
-    $res = $checkStmt->get_result()->fetch_assoc();
+    $exists = $checkStmt->get_result()->fetch_assoc();
     $checkStmt->close();
 
-    if ($res && password_verify($groupPass, $res['Password'])) {
-        // Password matches existing hash; only update Username and CellPhone
-        $stmt = $mysqli->prepare("UPDATE `$tGroups` SET Username = ?, CellPhone = ? WHERE ListId = ?");
-        $stmt->bind_param("ssi", $groupUser, $groupPhone, $groupId);
-    } else {
-        // Insert new row or update with new hashed password
-        $stmt = $mysqli->prepare("
-            INSERT INTO `$tGroups` (ListId, Username, Password, CellPhone)
-            VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE
-                Username = VALUES(Username),
-                Password = VALUES(Password),
-                CellPhone = VALUES(CellPhone)
-        ");
-        $stmt->bind_param("isss", $groupId, $groupUser, $hashedPass, $groupPhone);
-    }
+    if (!$exists) {
+        $hashedPass = password_hash($groupPass, PASSWORD_DEFAULT);
+        $mustChange = 1;
 
-    $stmt->execute();
-    $stmt->close();
-    echo "SMSGroups synced with environment variables for ListId=$groupId ($groupUser).\n";
+        $stmt = $mysqli->prepare("
+            INSERT INTO `$tGroups` (ListId, Username, Password, CellPhone, MustChangePassword)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        $stmt->bind_param("isssi", $groupId, $groupUser, $hashedPass, $groupPhone, $mustChange);
+        $stmt->execute();
+        $stmt->close();
+        echo "Initial SMSGroups user created for ListId=$groupId ($groupUser). Password change required on first login.\n";
+    } else {
+        echo "SMSGroups entry for ListId=$groupId already exists; skipping password overwrite.\n";
+    }
 }
 
 mysqli_close($mysqli);

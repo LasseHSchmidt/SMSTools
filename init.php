@@ -32,6 +32,9 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 // Redirect to login page if not authenticated
 if (!$isLoggedIn && $cmd !== 'login') {
     $cmd = "login";
+} elseif ($isLoggedIn && !empty($_SESSION['must_change_password'])) {
+    // Force password change before allowing access to any other page
+    $cmd = "changepassword";
 }
 
 // Retrieve IDs from session
