@@ -30,10 +30,11 @@ $translations = [
         // Change Password
         'pw_change_title'   => 'Skift adgangskode',
         'pw_change_notice'  => 'Da dette er dit første login, skal du vælge en ny personlig adgangskode.',
-        'pw_new'            => 'Ny adgangskode (min. 8 tegn)',
+        'pw_new'            => 'Ny adgangskode (min. 10 tegn, inkl. stort/lille bogstav, tal og specialtegn)',
         'pw_confirm'        => 'Bekræft ny adgangskode',
         'pw_btn_save'       => 'Gem ny adgangskode',
-        'pw_err_short'      => 'Adgangskoden skal være på mindst 8 tegn.',
+        'pw_err_short'      => 'Adgangskoden skal være på mindst 10 tegn.',
+        'pw_err_weak'       => 'Adgangskoden er for svag. Brug mindst ét stort bogstav, ét lille bogstav, ét tal og ét specialtegn, og undgå simple talrækker.',
         'pw_err_mismatch'   => 'De to adgangskoder er ikke ens.',
         'pw_err_same'       => 'Den nye adgangskode må ikke være den samme som standardadgangskoden.',
 
@@ -93,10 +94,11 @@ $translations = [
         // Change Password
         'pw_change_title'   => 'Change Password',
         'pw_change_notice'  => 'Since this is your first login, you must choose a new personal password.',
-        'pw_new'            => 'New Password (min. 8 characters)',
+        'pw_new'            => 'New Password (min. 10 chars, incl. upper/lowercase, number & special char)',
         'pw_confirm'        => 'Confirm New Password',
         'pw_btn_save'       => 'Save New Password',
-        'pw_err_short'      => 'Password must be at least 8 characters long.',
+        'pw_err_short'      => 'Password must be at least 10 characters long.',
+        'pw_err_weak'       => 'Password is too weak. Include at least one uppercase letter, one lowercase letter, one number, and one special character, and avoid common sequences.',
         'pw_err_mismatch'   => 'The two passwords do not match.',
         'pw_err_same'       => 'The new password cannot be the same as the default password.',
 

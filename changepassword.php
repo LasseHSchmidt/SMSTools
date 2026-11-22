@@ -6,14 +6,48 @@ if (!$isLoggedIn || !$listid) {
     exit();
 }
 
+/**
+ * Validate password complexity and reject common weak patterns.
+ */
+function is_strong_password(string $password): bool {
+    // Require uppercase, lowercase, digit, and special character
+    if (!preg_match('/[A-Z]/', $password) ||
+        !preg_match('/[a-z]/', $password) ||
+        !preg_match('/[0-9]/', $password) ||
+        !preg_match('/[^A-Za-z0-9]/', $password)) {
+        return false;
+    }
+
+    // Reject common weak substrings/sequences regardless of case
+    $lower = strtolower($password);
+    $banned = [
+        '123456', '234567', '345678', '456789', '654321',
+        'password', 'qwerty', 'admin', 'smstools', 'changeme', 'skiftmig'
+    ];
+    foreach ($banned as $weak) {
+        if (strpos($lower, $weak) !== false) {
+            return false;
+        }
+    }
+
+    // Reject repeated identical characters (e.g. "aaaa" or "1111")
+    if (preg_match('/(.)\1{3,}/', $password)) {
+        return false;
+    }
+
+    return true;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_pw'])) {
     verify_csrf();
 
     $newPw     = $_POST['new_password'] ?? '';
     $confirmPw = $_POST['confirm_password'] ?? '';
 
-    if (strlen($newPw) < 8) {
+    if (strlen($newPw) < 10) {
         $error = __('pw_err_short');
+    } elseif (!is_strong_password($newPw)) {
+        $error = __('pw_err_weak');
     } elseif ($newPw !== $confirmPw) {
         $error = __('pw_err_mismatch');
     } else {
@@ -63,11 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_pw'])) {
         <?php echo csrf_field(); ?>
         <div class="form-group">
             <label for="new_password"><?php echo htmlspecialchars(__('pw_new'), ENT_QUOTES, 'UTF-8'); ?></label>
-            <input type="password" name="new_password" id="new_password" autocomplete="new-password" minlength="8" required autofocus />
+            <input type="password" name="new_password" id="new_password" autocomplete="new-password" minlength="10" required autofocus />
         </div>
         <div class="form-group">
             <label for="confirm_password"><?php echo htmlspecialchars(__('pw_confirm'), ENT_QUOTES, 'UTF-8'); ?></label>
-            <input type="password" name="confirm_password" id="confirm_password" autocomplete="new-password" minlength="8" required />
+            <input type="password" name="confirm_password" id="confirm_password" autocomplete="new-password" minlength="10" required />
         </div>
 
         <button type="submit" name="change_pw" class="login-btn"><?php echo htmlspecialchars(__('pw_btn_save'), ENT_QUOTES, 'UTF-8'); ?></button>
