@@ -63,13 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
         <div class="form-group">
             <label for="cellphone"><?php echo htmlspecialchars(__('label_cellphone'), ENT_QUOTES, 'UTF-8'); ?></label>
             <input type="text" 
-                    id="cellphone" 
-                    name="cellphone" 
-                    placeholder="88888888" 
-                    required 
-                    maxlength="8" 
-                    pattern="[0-9]{8}"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+                id="cellphone" 
+                name="cellphone" 
+                placeholder="+4512345678" 
+                required 
+                maxlength="20" 
+                pattern="^\+?[0-9\s\-]{7,20}$"
+                oninput="this.value = this.value.replace(/[^0-9+\s\-]/g, '');" />
         </div>
 
         <input type="hidden" name="phone" />

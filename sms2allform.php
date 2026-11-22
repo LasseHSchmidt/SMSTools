@@ -23,14 +23,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ok'])) {
         $stmt->execute();
         $results = $stmt->get_result();
 
+        $default_cc = preg_replace('/[^0-9]/', '', (string)(getenv('DEFAULT_COUNTRY_CODE') ?: ''));
         $recipients = [];
+
         while ($line = $results->fetch_assoc()) {
-            // Strip spaces/characters and prepend Danish country code (45) if 8 digits
-            $clean_phone = preg_replace('/[^0-9]/', '', $line["CellPhone"]);
-            if (strlen($clean_phone) === 8) {
-                $clean_phone = '45' . $clean_phone;
+            $raw_phone = trim($line["CellPhone"]);
+
+            // Convert leading '00' international prefix to '+'
+            if (strpos($raw_phone, '00') === 0) {
+                $raw_phone = '+' . substr($raw_phone, 2);
             }
-            if (!empty($clean_phone)) {
+
+            $has_plus = (strpos($raw_phone, '+') === 0);
+            $clean_phone = preg_replace('/[^0-9]/', '', $raw_phone);
+
+            // Only prepend DEFAULT_COUNTRY_CODE if no '+' was given and length suggests a local number (e.g. 8 digits)
+            if (!$has_plus && !empty($default_cc) && strlen($clean_phone) === 8) {
+                $clean_phone = $default_cc . $clean_phone;
+            }
+
+            // Valid international MSISDN is typically 7 to 15 digits
+            if (strlen($clean_phone) >= 7 && strlen($clean_phone) <= 15) {
                 $recipients[] = ['msisdn' => (int)$clean_phone];
             }
         }
