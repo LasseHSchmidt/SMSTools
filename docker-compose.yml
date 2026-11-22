@@ -7,6 +7,9 @@ services:
     ports:
       - "8088:80"
     environment:
+      # Application settings
+      DEFAULT_LANG: ${DEFAULT_LANG:-da}
+      DEFAULT_COUNTRY_CODE: ${DEFAULT_COUNTRY_CODE:-}
       # Database connection settings
       DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
@@ -15,7 +18,7 @@ services:
       # GatewayAPI credentials
       API_URL: ${API_URL}
       API_TOKEN: ${API_TOKEN}
-      # Default SMS group user synced to SMSGroups table on startup
+      # Initial default SMS group user created on first startup
       SMS_GROUP_ID: ${SMS_GROUP_ID}
       SMS_GROUP_USER: ${SMS_GROUP_USER}
       SMS_GROUP_PASS: ${SMS_GROUP_PASS}
